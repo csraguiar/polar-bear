@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2e3440" />
+    <meta name="description" content="A quiet, endlessly looping Arctic journey. A low-poly polar bear, a passing bird, and a cub finding its own pace." />
+    <title>A quiet passage — North</title>
+  </head>
+  <body>
+    <header class="page-header" aria-label="North">
+      <span class="wordmark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 7 18-7-4-7 4Z"/><path d="M12 2v14"/></svg>NORTH</span>
+      <span class="edition">An endless little journey <span class="edition-dot">·</span> 001</span>
+    </header>
+    <main id="stage">
+      <canvas id="scene" role="img" aria-label="A white polar bear walks across dark Arctic ground. A blue bird visits its back, then a cub joins the journey.">A polar bear walking through a quiet Arctic landscape.</canvas>
+      <p id="scene-error" role="alert" hidden>This little journey needs WebGL. Please try a browser with hardware acceleration enabled.</p>
+      <noscript><p class="no-script">Enable JavaScript to watch this little journey.</p></noscript>
+    </main>
+    <footer class="film-footer">
+      <div class="caption">
+        <p class="eyebrow">Polar night</p>
+        <h1>A quiet passage.</h1>
+        <p class="subtitle">At the pace of the Arctic.</p>
+      </div>
+      <div class="playback" aria-label="Animation playback">
+        <div class="playback-top">
+          <span id="chapter">The long way home</span>
+          <div class="buttons">
+            <button id="restart" type="button" aria-label="Restart animation" title="Restart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1.6 7M4 4v6h6"/></svg></button>
+            <button id="toggle" type="button" aria-label="Pause animation" title="Pause (Space)">
+              <svg id="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12M15 6v12"/></svg>
+              <svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="m9 5 10 7-10 7Z"/></svg>
+            </button>
+          </div>
+        </div>
+        <label class="sr-only" for="timeline">Animation position in seconds</label>
+        <input id="timeline" type="range" min="0" max="40" step="0.01" value="0" aria-valuetext="0 seconds of 40" />
+        <div class="playback-bottom"><span><span id="time">00:00</span><span class="duration"> / 00:40</span></span><span class="loop-label"><svg viewBox="0 0 24 12" aria-hidden="true"><path d="M12 6C9 1 2 0 2 6s7 5 10 0 10-5 10 0-7 5-10 0Z"/></svg> A continuous journey</span></div>
+      </div>
+    </footer>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
