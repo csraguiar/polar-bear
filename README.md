@@ -28,3 +28,27 @@ blender --background --factory-startup --python tools/build_bear.py -- --source 
 ```
 
 The original STL is not included. The build script preserves independently animated legs, head, and the bird's perch point.
+
+## Deployment
+
+This project is configured for easy deployment to **Netlify** using the included `netlify.toml` file.
+
+### Option 1: Git Integration (Recommended)
+1. Push this repository to your GitHub, GitLab, or Bitbucket account.
+2. Go to [Netlify](https://www.netlify.com/) and click **Add new site** > **Import an existing project**.
+3. Select your repository. Netlify will automatically detect `netlify.toml` and configure the build settings.
+4. Click **Deploy**! Subsequent pushes to your main branch will trigger automatic redeployments.
+
+### Option 2: Netlify CLI (Direct Deploy)
+You can deploy directly from your local terminal using the Netlify CLI:
+```sh
+# 1. Install Netlify CLI globally
+npm install -g netlify-cli
+
+# 2. Build the production assets
+npm run build
+
+# 3. Deploy to production
+netlify deploy --prod --dir=dist
+```
+
