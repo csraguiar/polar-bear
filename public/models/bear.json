@@ -1,0 +1,12 @@
+{
+  "source": "Bear.stl",
+  "sourceSha256": "408f10bf2302c3af9997d63d3c33d888b4e141890abcfa594fa89975546d06c4",
+  "sourceTriangles": 484336,
+  "triangles": 10050,
+  "bones": 16,
+  "perchBlender": [
+    -0.44999998807907104,
+    -0.12999999523162842,
+    3.0564892292022705
+  ]
+}

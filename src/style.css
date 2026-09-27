@@ -19,16 +19,14 @@ button { -webkit-tap-highlight-color: transparent; }
 .wordmark { display: flex; align-items: center; gap: 13px; font-size: 12px; letter-spacing: 0.32em; font-weight: 500; }
 .wordmark svg { width: 23px; height: 23px; stroke: #88c0d0; stroke-width: 1; fill: none; }
 .edition { font-size: 10px; letter-spacing: 0.13em; color: var(--muted); }
-.edition-dot { padding: 0 15px; }
 #stage { height: 100vh; height: 100dvh; min-height: 420px; }
 #scene { display: block; width: 100%; height: 100%; }
 .film-footer { position: absolute; z-index: 2; bottom: 37px; left: 48px; right: 48px; display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; pointer-events: none; }
-.eyebrow { margin: 0 0 10px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent); }
 h1 { margin: 0; font-family: 'Libre Caslon Display', Georgia, serif; font-size: clamp(30px, 3.4vw, 48px); font-weight: 400; letter-spacing: -0.025em; line-height: 1.05; }
 .subtitle { margin: 12px 0 0; font-size: 11px; letter-spacing: 0.025em; color: var(--muted); }
 .playback { width: 285px; flex-shrink: 0; pointer-events: auto; }
 .playback-top, .playback-bottom { display: flex; justify-content: space-between; align-items: center; }
-#chapter { font-size: 11px; letter-spacing: 0.01em; color: #d8dee9; }
+.playback-top { justify-content: flex-end; }
 .buttons { display: flex; gap: 4px; }
 button { width: 36px; height: 36px; border: 1px solid transparent; border-radius: 50%; color: #d8dee9; background: transparent; display: grid; place-items: center; cursor: pointer; transition: color 150ms, background 150ms; }
 button:hover { color: #eceff4; background: #434c5e; }
@@ -43,14 +41,12 @@ button svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke
 #timeline::-moz-range-thumb { height: 6px; width: 6px; border: none; border-radius: 50%; background: #d8dee9; }
 .playback-bottom { font-size: 9px; color: var(--muted); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
 .duration { color: #a4b0c3; opacity: 0.65; }
-.loop-label { display: flex; gap: 6px; align-items: center; }
-.loop-label svg { width: 16px; height: 10px; fill: none; stroke: #81a1c1; stroke-width: 1.2; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-#scene-error, .no-script { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); max-width: 360px; text-align: center; font-size: 14px; line-height: 1.7; color: #d8dee9; }
+#scene-error, #scene-loading, .no-script { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); max-width: 360px; text-align: center; font-size: 14px; line-height: 1.7; color: #d8dee9; }
+button:disabled, input:disabled { opacity: 0.4; cursor: wait; }
 @media (max-width: 600px) {
   .page-header { padding: 25px 24px; }
   .edition { font-size: 8px; letter-spacing: 0.04em; }
-  .edition-dot { padding: 0 5px; }
   .wordmark { font-size: 10px; gap: 9px; }
   .film-footer { left: 24px; right: 24px; bottom: 26px; flex-direction: column; align-items: stretch; gap: 26px; }
   .playback { width: 100%; }
@@ -60,7 +56,7 @@ button svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke
 @media (max-height: 540px) and (min-width: 601px) {
   .page-header { padding: 20px 30px; }
   .film-footer { left: 30px; right: 30px; bottom: 20px; }
-  .subtitle, .eyebrow { display: none; }
+  .subtitle { display: none; }
   h1 { font-size: 30px; }
 }
 @media (prefers-reduced-motion: reduce) { button { transition: none; } }

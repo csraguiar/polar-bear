@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import './style.css';
-import { createBear } from './bear.js';
+import { createBear, loadBearAsset, poseSharedGlance } from './bear.js';
 import { createBird } from './bird.js';
 import { createWorld } from './world.js';
-import { LOOP_DURATION, WALK_PERIOD, cubState, chapterAt, mod } from './timeline.js';
+import { CUB_SCALE, CUB_LANE_Z, LOOP_DURATION, WALK_PERIOD, cubState, sharedGlance, mod } from './timeline.js';
 
 const canvas = document.querySelector('#scene');
 const stage = document.querySelector('#stage');
@@ -11,11 +11,17 @@ const toggle = document.querySelector('#toggle');
 const restart = document.querySelector('#restart');
 const slider = document.querySelector('#timeline');
 const timeLabel = document.querySelector('#time');
-const chapter = document.querySelector('#chapter');
 const error = document.querySelector('#scene-error');
+const loading = document.querySelector('#scene-loading');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-function start() {
+async function start() {
+  let asset;
+  try {
+    asset = await loadBearAsset(`${import.meta.env.BASE_URL}models/bear.glb`);
+  } catch (cause) {
+    throw new Error('The bear model could not be loaded. Please refresh to try again.', { cause });
+  }
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -26,12 +32,12 @@ function start() {
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-9, 9, 5, -5, 0.1, 100);
   const world = createWorld(scene);
-  const adult = createBear();
-  const cub = createBear({ scale: 0.48, cub: true });
+  const adult = createBear(asset);
+  const cub = createBear(asset, { scale: CUB_SCALE, cub: true });
   const bird = createBird();
   scene.add(adult.root, cub.root, bird.root);
   adult.root.position.x = -0.35;
-  cub.root.position.z = 1.3;
+  cub.root.position.z = CUB_LANE_Z;
   let elapsed = 0;
   let previous = null;
   let playing = !reducedMotion.matches;
@@ -64,8 +70,10 @@ function start() {
     const state = cubState(time);
     cub.root.visible = state.visible;
     cub.root.position.x = state.x;
-    cub.update(time, state.phase, state.run, 0.82 / 0.48);
+    cub.update(time, state.phase, state.run, state.stride);
+    poseSharedGlance(adult, cub, sharedGlance(time));
     bird.update(time, adult);
+    adult.followBird(time, bird.root.position);
     world.update(time);
     renderer.render(scene, camera);
     slider.value = String(time);
@@ -74,7 +82,6 @@ function start() {
     if (uiSecond !== second) {
       timeLabel.textContent = `00:${String(second).padStart(2, '0')}`;
       slider.setAttribute('aria-valuetext', `${second} seconds of ${LOOP_DURATION}`);
-      chapter.textContent = chapterAt(time);
       uiSecond = second;
     }
   }
@@ -112,6 +119,11 @@ function start() {
   const observer = new ResizeObserver(resize);
   observer.observe(stage);
   resize();
+  loading.hidden = true;
+  stage.setAttribute('aria-busy', 'false');
+  toggle.disabled = false;
+  restart.disabled = false;
+  slider.disabled = false;
   renderer.setAnimationLoop((timestamp) => {
     if (document.hidden || lost) { previous = null; return; }
     const delta = previous === null ? 0 : (timestamp - previous) / 1000;
@@ -154,16 +166,21 @@ function start() {
     });
     geometries.forEach((geometry) => geometry.dispose());
     materials.forEach((material) => material.dispose());
+    adult.dispose();
+    cub.dispose();
     renderer.dispose();
     delete window.__north;
   }
   if (import.meta.hot) import.meta.hot.dispose(dispose);
 }
 
-try { start(); } catch (cause) {
+start().catch((cause) => {
   console.error('Could not start the scene:', cause);
   error.hidden = false;
+  if (cause.cause) error.textContent = cause.message;
+  loading.hidden = true;
+  stage.setAttribute('aria-busy', 'false');
   toggle.disabled = true;
   restart.disabled = true;
   slider.disabled = true;
-}
+});

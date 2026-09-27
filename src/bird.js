@@ -10,7 +10,9 @@ const pale = material(NORD.snow);
 const ink = material(NORD.night);
 const destination = new THREE.Vector3();
 const flight = new THREE.Vector3();
-const landing = new THREE.Vector3(-0.42, 2.947, 0.13);
+const perchRotation = new THREE.Quaternion();
+const flightRotation = new THREE.Quaternion();
+const flightAxis = new THREE.Vector3(0, 0, 1);
 const arrival = new THREE.CubicBezierCurve3(
   new THREE.Vector3(-19, 3.8, -1.5), new THREE.Vector3(-9, 8.5, -1.8),
   new THREE.Vector3(-2.5, 3.8, 0.13), new THREE.Vector3(0, 0, 0),
@@ -73,8 +75,9 @@ export function createBird() {
     const state = birdState(time);
     root.visible = state.mode !== 'hidden';
     if (!root.visible) return;
-    bear.body.updateWorldMatrix(true, false);
-    destination.copy(landing).applyMatrix4(bear.body.matrixWorld);
+    bear.perch.updateWorldMatrix(true, false);
+    bear.perch.getWorldPosition(destination);
+    bear.perch.getWorldQuaternion(perchRotation);
     root.position.copy(destination);
     let flying = 0;
     let tilt = 0;
@@ -91,8 +94,8 @@ export function createBird() {
       flying = smooth(state.progress / 0.18);
       tilt = 0.22 * Math.sin(Math.PI * state.progress);
     }
-    root.rotation.z = bear.body.rotation.z * (1 - flying) + tilt;
-    root.rotation.x = bear.body.rotation.x * (1 - flying);
+    flightRotation.setFromAxisAngle(flightAxis, tilt);
+    root.quaternion.copy(perchRotation).slerp(flightRotation, flying);
     body.position.y = (1 - flying) * Math.sin(time * 3.1) * 0.007;
     head.rotation.y = (1 - flying) * (Math.sin(time * 1.7) * 0.16 + Math.sin(time * 3.4) * 0.06);
     head.rotation.z = Math.sin(time * 2.4) * 0.055 * (1 - flying);
